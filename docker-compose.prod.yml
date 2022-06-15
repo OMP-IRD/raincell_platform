@@ -1,0 +1,59 @@
+version: "3.7"
+
+secrets:
+  pg_postgres_password:
+    file: secrets-prod/pg_postgres_password.txt
+  django_env:
+    file: secrets-prod/django_env.txt
+  django_superuser_password:
+    file: secrets-prod/django_superuser_password.txt
+
+services:
+  django:
+    image: pigeosolutions/raincell_backend:latest
+    restart: always
+    build: ./raincell_backend
+#    command: ["sleep","10000"]
+#    ports:
+#      - 8000:8000
+    expose:
+      - 8000
+    environment:
+      - DJANGO_ENV_FILE=/run/secrets/django_env
+      - DJANGO_SUPERUSER_PASSWORD_FILE=/run/secrets/django_superuser_password
+      - STATIC_ROOT=/static/
+      # Needed by wait-for-db:
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+    volumes:
+#      - django_static_files:/static
+      - ./nc_data:/nc_data
+    networks:
+      - internal
+      - traefik-proxy_proxy_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-proxy_proxy_network"
+      - "traefik.http.routers.django.tls=true"
+      - "traefik.http.routers.django.entrypoints=websecure"
+      - "traefik.http.routers.django.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/api`)"
+      - "traefik.http.routers.django.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.django.tls.domains[0].main=raincell.pigeo.fr"
+
+  pg-tileserv:
+    networks:
+      - internal
+      - traefik-proxy_proxy_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-proxy_proxy_network"
+      - "traefik.http.routers.pg-tileserv.tls=true"
+      - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
+      - "traefik.http.routers.pg-tileserv.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/tiles`)"
+      - "traefik.http.routers.pg-tileserv.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.pg-tileserv.tls.domains[0].main=raincell.pigeo.fr"
+
+networks:
+  internal:
+  traefik-proxy_proxy_network:
+    external: true

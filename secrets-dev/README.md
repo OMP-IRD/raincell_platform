@@ -1,0 +1,1 @@
+Those are secrets examples. Do not use them in production, as they are versioned !

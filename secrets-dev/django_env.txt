@@ -1,0 +1,12 @@
+DEBUG=False
+SECRET_KEY=insecure-key-fqkrjgràgè"'('mtrầg=('ky'(ok
+ALLOWED_HOSTS=localhost,127.0.0.1,raincell.pigeo.fr
+POSTGRES_HOST=database
+POSTGRES_PORT=5432
+POSTGRES_DB=raincell
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=raincell
+STATIC_URL=/static/
+STATIC_ROOT=/static/
+MEDIA_ROOT=media/
+MEDIA_URL=/media/

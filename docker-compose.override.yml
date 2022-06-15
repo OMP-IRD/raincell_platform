@@ -1,0 +1,34 @@
+version: "3.7"
+# Development overrides
+
+volumes:
+  postgresql_data:
+#  django_static_files:
+
+services:
+  database:
+    networks:
+      - internal
+
+  django:
+#    command: ["sleep","10000"]
+    ports:
+      - 8000:8000
+    volumes:
+#      - django_static_files:/static
+      - ./raincell_backend/sample_data:/sample_data
+    networks:
+      - internal
+      - web
+
+  pg-tileserv:
+    ports:
+      - 7800:7800
+    networks:
+      - internal
+      - web
+
+
+networks:
+  web:
+  internal:

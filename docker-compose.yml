@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.7"
 
 volumes:
   postgresql_data:
@@ -43,20 +43,13 @@ services:
       # Needed by wait-for-db:
       - POSTGRES_HOST=database
       - POSTGRES_PORT=5432
-    volumes:
+#    volumes:
 #      - django_static_files:/static
-      - ./raincell_backend/sample_data:/sample_data
     secrets:
       - django_env
       - django_superuser_password
     networks:
       - internal
-      - proxy_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.django.tls=true"
-      - "traefik.http.routers.django.entrypoints=websecure"
-      - "traefik.http.routers.django.rule=PathPrefix(`/api`)"
 
   pg-tileserv:
     image: pigeosolutions/pg_tileserv:latest
@@ -73,14 +66,6 @@ services:
       - 7800
     networks:
       - internal
-      - proxy_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pg-tileserv.tls=true"
-      - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
-      - "traefik.http.routers.pg-tileserv.rule=PathPrefix(`/tiles`)"
 
 networks:
   internal:
-  proxy_network:
-    external: true
