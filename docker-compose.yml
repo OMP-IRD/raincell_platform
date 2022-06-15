@@ -1,0 +1,86 @@
+version: "3.1"
+
+volumes:
+  postgresql_data:
+#  django_static_files:
+
+secrets:
+  pg_postgres_password:
+    file: secrets-dev/pg_postgres_password.txt
+  django_env:
+    file: secrets-dev/django_env.txt
+  django_superuser_password:
+    file: secrets-dev/django_superuser_password.txt
+
+services:
+  database:
+    image: postgis/postgis:14-3.2
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=raincell
+      - POSTGRES_PASSWORD_FILE=/run/secrets/pg_postgres_password
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    secrets:
+      - pg_postgres_password
+    networks:
+      - internal
+
+  django:
+    image: pigeosolutions/raincell_backend:latest
+    restart: always
+    build: ./raincell_backend
+#    command: ["sleep","10000"]
+#    ports:
+#      - 8000:8000
+    expose:
+      - 8000
+    environment:
+      - DJANGO_ENV_FILE=/run/secrets/django_env
+      - DJANGO_SUPERUSER_PASSWORD_FILE=/run/secrets/django_superuser_password
+      - STATIC_ROOT=/static/
+      # Needed by wait-for-db:
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+    volumes:
+#      - django_static_files:/static
+      - ./raincell_backend/sample_data:/sample_data
+    secrets:
+      - django_env
+      - django_superuser_password
+    networks:
+      - internal
+      - proxy_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.tls=true"
+      - "traefik.http.routers.django.entrypoints=websecure"
+      - "traefik.http.routers.django.rule=PathPrefix(`/api`)"
+
+  pg-tileserv:
+    image: pigeosolutions/pg_tileserv:latest
+    entrypoint: [ "/wait-for-db.sh" ]
+    depends_on:
+      - database
+    env_file:
+      - secrets-dev/pg_tileserv.env
+    environment:
+      - TS_BASEPATH=/tiles/
+#    ports:
+#      - 7800:7800
+    expose:
+      - 7800
+    networks:
+      - internal
+      - proxy_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pg-tileserv.tls=true"
+      - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
+      - "traefik.http.routers.pg-tileserv.rule=PathPrefix(`/tiles`)"
+
+networks:
+  internal:
+  proxy_network:
+    external: true
