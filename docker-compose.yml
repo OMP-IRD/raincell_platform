@@ -56,7 +56,7 @@ services:
   # we need to build it locally, then we can use it as base image to build
   # our own image, pigeosolutions/pg_tileserv:latest
   pg-tileserv-base:
-    image: pramsey/pg_tileserv:latest-alpine2
+    image: pramsey/pg_tileserv:latest-alpine
     entrypoint: ["echo","Used only for build phase. Shutting down now"]
     restart: "no"
     build:
@@ -64,7 +64,7 @@ services:
       dockerfile: Dockerfile.alpine
 
   pg-tileserv:
-    image: pigeosolutions/pg_tileserv:latest2
+    image: pigeosolutions/pg_tileserv:latest
     restart: always
     build:
       context: ./pg_tileserv/pigeosolutions
