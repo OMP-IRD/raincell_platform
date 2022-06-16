@@ -51,11 +51,28 @@ services:
     networks:
       - internal
 
+  # This service is a fake one, it is only used for the build phase:
+  # since pramsey did not push to dockerhub his alpine version
+  # we need to build it locally, then we can use it as base image to build
+  # our own image, pigeosolutions/pg_tileserv:latest
+  pg-tileserv-base:
+    image: pramsey/pg_tileserv:latest-alpine2
+    entrypoint: ["echo","Used only for build phase. Shutting down now"]
+    restart: "no"
+    build:
+      context: ./pg_tileserv
+      dockerfile: Dockerfile.alpine
+
   pg-tileserv:
-    image: pigeosolutions/pg_tileserv:latest
+    image: pigeosolutions/pg_tileserv:latest2
+    restart: always
+    build:
+      context: ./pg_tileserv/pigeosolutions
+      dockerfile: Dockerfile.alpine.pigeo
     entrypoint: [ "/wait-for-db.sh" ]
     depends_on:
       - database
+      - pg-tileserv-base
     env_file:
       - secrets-dev/pg_tileserv.env
     environment:
