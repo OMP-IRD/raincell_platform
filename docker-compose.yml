@@ -27,7 +27,7 @@ services:
     networks:
       - internal
 
-  django:
+  backend:
     image: pigeosolutions/raincell_backend:latest
     restart: always
     build: ./raincell_backend

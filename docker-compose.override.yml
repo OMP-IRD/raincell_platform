@@ -9,8 +9,10 @@ services:
   database:
     networks:
       - internal
+    ports:
+      - 5433:5432
 
-  django:
+  backend:
 #    command: ["sleep","10000"]
     ports:
       - 8000:8000

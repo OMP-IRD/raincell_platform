@@ -9,24 +9,10 @@ secrets:
     file: secrets-prod/django_superuser_password.txt
 
 services:
-  django:
-    image: pigeosolutions/raincell_backend:latest
-    restart: always
-    build: ./raincell_backend
-#    command: ["sleep","10000"]
-#    ports:
-#      - 8000:8000
-    expose:
-      - 8000
-    environment:
-      - DJANGO_ENV_FILE=/run/secrets/django_env
-      - DJANGO_SUPERUSER_PASSWORD_FILE=/run/secrets/django_superuser_password
-      - STATIC_ROOT=/static/
-      # Needed by wait-for-db:
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
+  backend:
     volumes:
 #      - django_static_files:/static
+      - ./raincell_backend/sample_data:/sample_data
       - ./nc_data:/nc_data
     networks:
       - internal
