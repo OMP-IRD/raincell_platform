@@ -30,6 +30,8 @@ services:
     networks:
       - internal
       - traefik-proxy_proxy_network
+    env_file:
+      - secrets-prod/pg_tileserv.env
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-proxy_proxy_network"

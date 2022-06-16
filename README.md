@@ -27,7 +27,8 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
 
-### importing dataYou can either import the sample dataset directly using the DB dump, or import your data using the app's import commands. 
+### importing data
+You can either import the sample dataset directly using the DB dump, or import your data using the app's import commands. 
 - _**Using the DB dump, for a quick setup**_:
   If on dev mode, the database's port is binded to localhost, so if you have psql client installed on your computer, you can run
   ```
