@@ -1,6 +1,6 @@
 [submodule "raincell_backend"]
 	path = raincell_backend
-	url = git@github.com:OMP-IRD/raincell_backend.git
+	url = https://github.com/OMP-IRD/raincell_backend.git
 [submodule "pg_tileserv"]
 	path = pg_tileserv
-	url = git@github.com:OMP-IRD/pg_tileserv.git
+	url = https://github.com/OMP-IRD/pg_tileserv.git
