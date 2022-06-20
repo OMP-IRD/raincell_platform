@@ -13,33 +13,47 @@ services:
     volumes:
 #      - django_static_files:/static
       - ./raincell_backend/sample_data:/sample_data
-      - ./nc_data:/nc_data
-    networks:
-      - internal
-      - traefik-proxy_proxy_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik-proxy_proxy_network"
-      - "traefik.http.routers.django.tls=true"
-      - "traefik.http.routers.django.entrypoints=websecure"
-      - "traefik.http.routers.django.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/api`)"
-      - "traefik.http.routers.django.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.django.tls.domains[0].main=raincell.pigeo.fr"
+#      - ./nc_data:/nc_data
+#    networks:
+#      - internal
+#      - traefik-proxy_proxy_network
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.docker.network=traefik-proxy_proxy_network"
+#      - "traefik.http.routers.django.tls=true"
+#      - "traefik.http.routers.django.entrypoints=websecure"
+#      - "traefik.http.routers.django.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/api`)"
+#      - "traefik.http.routers.django.tls.certresolver=letsEncrypt"
+#      - "traefik.http.routers.django.tls.domains[0].main=raincell.pigeo.fr"
 
   pg-tileserv:
+#    networks:
+#      - internal
+#      - traefik-proxy_proxy_network
+    env_file:
+      - secrets-prod/pg_tileserv.env
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.docker.network=traefik-proxy_proxy_network"
+#      - "traefik.http.routers.pg-tileserv.tls=true"
+#      - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
+#      - "traefik.http.routers.pg-tileserv.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/tiles`)"
+#      - "traefik.http.routers.pg-tileserv.tls.certresolver=letsEncrypt"
+#      - "traefik.http.routers.pg-tileserv.tls.domains[0].main=raincell.pigeo.fr"
+
+  varnish:
     networks:
       - internal
       - traefik-proxy_proxy_network
-    env_file:
-      - secrets-prod/pg_tileserv.env
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-proxy_proxy_network"
       - "traefik.http.routers.pg-tileserv.tls=true"
       - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
-      - "traefik.http.routers.pg-tileserv.rule=( Host(`localhost`) || Host(`raincell.pigeo.fr`) ) && PathPrefix(`/tiles`)"
+      - "traefik.http.routers.pg-tileserv.rule=Host(`localhost`) || Host(`raincell.pigeo.fr`)"
       - "traefik.http.routers.pg-tileserv.tls.certresolver=letsEncrypt"
       - "traefik.http.routers.pg-tileserv.tls.domains[0].main=raincell.pigeo.fr"
+
 
 networks:
   internal:

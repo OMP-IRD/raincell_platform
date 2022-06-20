@@ -7,30 +7,28 @@ volumes:
 
 services:
   database:
-    networks:
-      - internal
     ports:
-      - 5433:5432
+      - "5433:5432"
 
   backend:
 #    command: ["sleep","10000"]
     ports:
-      - 8000:8000
+      - "8000:8000"
     volumes:
 #      - django_static_files:/static
       - ./raincell_backend/sample_data:/sample_data
-    networks:
-      - internal
-      - web
 
   pg-tileserv:
     ports:
-      - 7800:7800
-    networks:
-      - internal
-      - web
+      - "7800:7800"
 
+  pg-featureserv:
+    ports:
+      - "9000:9000"
+
+  varnish:
+    ports:
+      - "80:80"
 
 networks:
-  web:
   internal:

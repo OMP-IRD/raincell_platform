@@ -14,7 +14,9 @@ secrets:
 
 services:
   database:
-    image: postgis/postgis:14-3.2
+    image: pigeosolutions/raincell_postgis:latest
+    build:
+      context: ./raincell_database
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -81,6 +83,44 @@ services:
 #      - 7800:7800
     expose:
       - 7800
+    networks:
+      - internal
+
+  pg-featureserv:
+    image: pramsey/pg_featureserv:latest
+#    entrypoint: [ "/wait-for-db.sh" ]
+    depends_on:
+      - database
+    env_file:
+      - secrets-dev/pg_tileserv.env
+    environment:
+      - PGFS_SERVER_BASEPATH=/features/
+      - PGFS_DATABASE_DBTIMEOUT=20
+      - PGFS_DATABASE_DBPOOLMAXCONNS=8
+      - PGFS_DATABASE_DEBUG=true
+      - PGFS_PAGING_LIMITMAX=10000
+#    ports:
+#      - 9000:9000
+    expose:
+      - 9000
+    networks:
+      - internal
+
+  varnish:
+    image: varnish:stable
+    volumes:
+      - "./config/varnish/default.vcl:/etc/varnish/default.vcl"
+#    ports:
+#      - "80:80"
+    tmpfs:
+      - /var/lib/varnish:exec
+    environment:
+      - VARNISH_SIZE=50MB
+    #    command: "-p default_keep=300"
+    depends_on:
+      - pg-tileserv
+      - pg-featureserv
+      - backend
     networks:
       - internal
 

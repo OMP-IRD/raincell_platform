@@ -58,6 +58,10 @@ You can either import the sample dataset directly using the DB dump, or import y
   # Generate fake data
   docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec backend \
     /app/manage.py raincell_generate_fake_data --verbose --overwrite_existing 2022-05-01 2022-06-14
+  
+  # Generate fake data for specific cells
+  docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec backend \
+    /app/manage.py raincell_generate_fake_data --verbose --overwrite_existing --cell_ids=0922750019140000 2021-06-12 2022-06-14
   ```
 
 ## About Raincell
