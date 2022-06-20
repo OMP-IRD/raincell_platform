@@ -115,6 +115,8 @@ services:
       - "./config/varnish/default.vcl:/etc/varnish/default.vcl"
 #    ports:
 #      - "80:80"
+    expose:
+      - 80
     tmpfs:
       - /var/lib/varnish:exec
     environment:

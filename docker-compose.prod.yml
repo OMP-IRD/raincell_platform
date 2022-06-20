@@ -55,11 +55,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-proxy_proxy_network"
-      - "traefik.http.routers.pg-tileserv.tls=true"
-      - "traefik.http.routers.pg-tileserv.entrypoints=websecure"
-      - "traefik.http.routers.pg-tileserv.rule=Host(`localhost`) || Host(`raincell.pigeo.fr`)"
-      - "traefik.http.routers.pg-tileserv.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.pg-tileserv.tls.domains[0].main=raincell.pigeo.fr"
+      - "traefik.http.routers.varnish.tls=true"
+      - "traefik.http.routers.varnish.entrypoints=websecure"
+      - "traefik.http.routers.varnish.rule=Host(`localhost`) || Host(`raincell.pigeo.fr`)"
+      - "traefik.http.routers.varnish.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.varnish.tls.domains[0].main=raincell.pigeo.fr"
 
 
 networks:
