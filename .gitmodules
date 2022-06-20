@@ -4,3 +4,6 @@
 [submodule "pg_tileserv"]
 	path = pg_tileserv
 	url = https://github.com/OMP-IRD/pg_tileserv.git
+[submodule "pg_featureserv"]
+	path = pg_featureserv
+	url = https://github.com/OMP-IRD/pg_featureserv.git

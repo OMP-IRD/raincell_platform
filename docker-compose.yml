@@ -87,8 +87,11 @@ services:
       - internal
 
   pg-featureserv:
-    image: pramsey/pg_featureserv:latest
-#    entrypoint: [ "/wait-for-db.sh" ]
+    image: pigeosolutions/pg_featureserv:latest
+    build:
+      context: ./pg_featureserv/pigeosolutions
+      dockerfile: Dockerfile.pigeo
+    entrypoint: [ "/wait-for-db.sh" ]
     depends_on:
       - database
     env_file:
