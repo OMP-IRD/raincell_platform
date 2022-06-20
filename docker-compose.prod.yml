@@ -41,6 +41,13 @@ services:
 #      - "traefik.http.routers.pg-tileserv.tls.certresolver=letsEncrypt"
 #      - "traefik.http.routers.pg-tileserv.tls.domains[0].main=raincell.pigeo.fr"
 
+  pg-featureserv:
+#    networks:
+#      - internal
+#      - traefik-proxy_proxy_network
+    env_file:
+      - secrets-prod/pg_tileserv.env
+
   varnish:
     networks:
       - internal
