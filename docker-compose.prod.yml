@@ -13,7 +13,7 @@ services:
     volumes:
 #      - django_static_files:/static
       - ./raincell_backend/sample_data:/sample_data
-#      - ./nc_data:/nc_data
+      - ./nc_data:/nc_data
 #    networks:
 #      - internal
 #      - traefik-proxy_proxy_network
