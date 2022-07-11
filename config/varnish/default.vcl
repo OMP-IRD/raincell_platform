@@ -15,6 +15,12 @@ backend api {
     .port = "8000";
 }
 
+backend frontend {
+    .host = "frontend";
+    .port = "80";
+}
+
+
 sub vcl_deliver {
   # Display hit/miss info
   if (obj.hits > 0) {
@@ -38,6 +44,10 @@ sub vcl_backend_response {
 }
 
 sub vcl_recv {
+   if (req.url ~ "^/raincell-public") {
+    #unset req.http.cookie;
+    set req.backend_hint = frontend;
+   }
 # Disable any cookie when looking for pg_feature stuff
    if (req.url ~ "^/features/") {
     unset req.http.cookie;

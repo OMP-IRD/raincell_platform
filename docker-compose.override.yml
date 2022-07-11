@@ -22,6 +22,10 @@ services:
     ports:
       - "9000:9000"
 
+  frontend:
+    ports:
+      - "81:80"
+
   varnish:
     ports:
       - "80:80"

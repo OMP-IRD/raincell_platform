@@ -109,6 +109,11 @@ services:
     networks:
       - internal
 
+  frontend:
+    image: pigeosolutions/raincell-public
+    networks:
+      - internal
+
   varnish:
     image: varnish:stable
     volumes:
@@ -126,6 +131,7 @@ services:
       - pg-tileserv
       - pg-featureserv
       - backend
+      - frontend
     networks:
       - internal
 
